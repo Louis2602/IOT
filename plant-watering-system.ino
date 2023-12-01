@@ -2,6 +2,7 @@
 #include <DHT_U.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <LiquidCrystal.h>
 
 // Wifi information
 const char* ssid = "Wokwi-GUEST";
@@ -15,7 +16,18 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 #define DHT11_PIN 8
+#define soilPin A0
+#define rs 12
+#define en 11
+#define d4 5
+#define d5 4
+#define d6 3
+#define d7 2
+
 DHT dht(DHT11_PIN, DHT11);
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+int soilMoisture;
 
 void wifiConnect() {
   WiFi.begin(ssid, password);
@@ -74,6 +86,7 @@ void setup(void)
   dht.begin();
   // MQTT server setup
   MQTTConfig();
+  lcd.begin(16, 2);
 }
 
 struct DHT11Readings
@@ -113,13 +126,46 @@ void loop() {
   // Thong so thoi gian thuc te
 
   // Thong so do am dat
+  soilMoisture = analogRead(soilPin);
 
   // Thong so muc nuoc
 
   // Che do tu dong tuoi cay dua vao nhiet do, do am khong khi, do am dat
 
   // Hien thi thong tin len LCD
+  lcd.print(">> Soil Moisture: ");
+  lcd.print(soilMoisture);
 
+  for (int positionCounter = 0; positionCounter < 20; positionCounter++) {
+    lcd.scrollDisplayLeft();
+    delay(150);
+  }
+
+  delay(1000);
+  lcd.clear();
+
+  lcd.print(">> Humidity: ");
+  lcd.print(sensorDHT.humidity);
+  lcd.print("%");
+
+  for (int positionCounter = 0; positionCounter < 20; positionCounter++) {
+    lcd.scrollDisplayLeft();
+    delay(150);
+  }
+
+  delay(1000);
+  lcd.clear();
+
+  lcd.print(">> Temperature: ");
+  lcd.print(sensorDHT.temperature);
+
+  for (int positionCounter = 0; positionCounter < 20; positionCounter++) {
+    lcd.scrollDisplayLeft();
+    delay(150);
+  }
+
+  delay(1000);
+  lcd.clear();
 
   //***Publish data to MQTT Server***
   // data sent to MQTT Server must be a string
