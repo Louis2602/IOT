@@ -1,0 +1,409 @@
+[
+    {
+        "id": "8efe1040e21108ad",
+        "type": "tab",
+        "label": "Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4de9506d.e7364",
+        "type": "ui_group",
+        "name": "Dashboard",
+        "tab": "9fd192321435fb66",
+        "order": 3,
+        "disp": true,
+        "width": 17,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9fd192321435fb66",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "94ccb3c930dd1e4e",
+        "type": "ui_gauge",
+        "z": "8efe1040e21108ad",
+        "name": "",
+        "group": "4de9506d.e7364",
+        "order": 6,
+        "width": 6,
+        "height": 8,
+        "gtype": "wave",
+        "title": "Water Level",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 850,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "08ea61993b2aeba0",
+        "type": "function",
+        "z": "8efe1040e21108ad",
+        "name": "function 3",
+        "func": "const randValue = Math.random()*100;\nmsg.payload = randValue;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 480,
+        "wires": [
+            [
+                "94ccb3c930dd1e4e"
+            ]
+        ]
+    },
+    {
+        "id": "937e9201.0a617",
+        "type": "inject",
+        "z": "8efe1040e21108ad",
+        "name": "Timer",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 300,
+        "wires": [
+            [
+                "08ea61993b2aeba0",
+                "ffdab052677ae9ee",
+                "d320c244.f24af",
+                "1e3effb1.5ff58"
+            ]
+        ]
+    },
+    {
+        "id": "1e3effb1.5ff58",
+        "type": "function",
+        "z": "8efe1040e21108ad",
+        "name": "Temperature",
+        "func": "const randValue = Math.floor(Math.random() * Math.floor(10)) + 20; // 20 - 39;\nmsg.payload = randValue;\nmsg.topic = 'Temperature'\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 160,
+        "wires": [
+            [
+                "e0da9c3722b44c91"
+            ]
+        ]
+    },
+    {
+        "id": "d320c244.f24af",
+        "type": "function",
+        "z": "8efe1040e21108ad",
+        "name": "Humidity",
+        "func": "const randValue = Math.floor(Math.random() * Math.floor(40)) + 40; // 40 - 79;\nmsg.payload = randValue;\nmsg.topic = 'Humidity'\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 240,
+        "wires": [
+            [
+                "d4eaedd1.98978",
+                "558844e9dd14ffd5"
+            ]
+        ]
+    },
+    {
+        "id": "d4eaedd1.98978",
+        "type": "ui_gauge",
+        "z": "8efe1040e21108ad",
+        "name": "Gauge : Humidity",
+        "group": "4de9506d.e7364",
+        "order": 4,
+        "width": 7,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#1a25ab",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 870,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e0da9c3722b44c91",
+        "type": "ui_level",
+        "z": "8efe1040e21108ad",
+        "group": "4de9506d.e7364",
+        "order": 2,
+        "width": 2,
+        "height": 8,
+        "name": "",
+        "label": "",
+        "colorHi": "#e60000",
+        "colorWarn": "#ff9900",
+        "colorNormal": "#00b3a7",
+        "colorOff": "#5c5c5c",
+        "min": 0,
+        "max": 100,
+        "segWarn": "10",
+        "segHigh": "50",
+        "unit": "Celsius",
+        "layout": "sv",
+        "channelA": "",
+        "channelB": "",
+        "decimals": 0,
+        "animations": "soft",
+        "shape": 2,
+        "colorschema": "rainbow",
+        "textoptions": "custom",
+        "colorText": "#eeeeee",
+        "fontLabel": "1",
+        "fontValue": "3",
+        "fontSmall": "",
+        "colorFromTheme": true,
+        "textAnimations": false,
+        "hideValue": false,
+        "tickmode": "off",
+        "peakmode": false,
+        "property": "payload",
+        "peaktime": 3000,
+        "x": 830,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "23d31642249749c3",
+        "type": "ui_gauge",
+        "z": "8efe1040e21108ad",
+        "name": "Gauge : Soil Moisture",
+        "group": "4de9506d.e7364",
+        "order": 14,
+        "width": 7,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Soil Moisture",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#1a25ab",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 880,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "166b622e741658e1",
+        "type": "ui_button",
+        "z": "8efe1040e21108ad",
+        "name": "Watering",
+        "group": "4de9506d.e7364",
+        "order": 24,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Watering",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 840,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ffdab052677ae9ee",
+        "type": "function",
+        "z": "8efe1040e21108ad",
+        "name": "Soil Moisture",
+        "func": "const randValue = Math.floor( Math.random() * Math.floor(10)) + 10; // 10 - 19;\nmsg.payload = randValue;\nmsg.topic = 'Soil Moisture'\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 360,
+        "wires": [
+            [
+                "23d31642249749c3",
+                "558844e9dd14ffd5"
+            ]
+        ]
+    },
+    {
+        "id": "558844e9dd14ffd5",
+        "type": "ui_chart",
+        "z": "8efe1040e21108ad",
+        "name": "History : Humidity & Soil Moisture",
+        "group": "4de9506d.e7364",
+        "order": 22,
+        "width": 17,
+        "height": 8,
+        "label": "Humidity & Soil Moisture",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "No Data Yet",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "12",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": "",
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 920,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "61ccaa0c43fad65f",
+        "type": "function",
+        "z": "8efe1040e21108ad",
+        "name": "Get date",
+        "func": "var d = new Date(msg.payload);\nvar day=d.getDate();\nvar month=d.getMonth();\nvar year=d.getFullYear();\nif(day<=9)\nday=\"0\"+day;\nmonth=month+1;\nvar date_out= day+\"/\"+month+\"/\"+year;\nmsg.payload = date_out.toString();\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 640,
+        "wires": [
+            [
+                "f16fc14cfdb72eff"
+            ]
+        ]
+    },
+    {
+        "id": "f16fc14cfdb72eff",
+        "type": "ui_text",
+        "z": "8efe1040e21108ad",
+        "group": "4de9506d.e7364",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Date Display",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "className": "",
+        "style": true,
+        "font": "Lucida Sans Unicode,Lucida Grande,sans-serif",
+        "fontSize": "24",
+        "color": "#000000",
+        "x": 670,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "ab65caef4a2a52c8",
+        "type": "inject",
+        "z": "8efe1040e21108ad",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 640,
+        "wires": [
+            [
+                "61ccaa0c43fad65f"
+            ]
+        ]
+    }
+]

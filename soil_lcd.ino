@@ -2,7 +2,7 @@
 
 #define soilPin A0
 
-int soilMoisture;
+// int soilMoisture;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -13,19 +13,19 @@ void setup() {
 }
 
 void loop() {
-  soilMoisture = analogRead(soilPin);
+  // soilMoisture = analogRead(soilPin);
   float humidity = 20; //test value
   float temperature = 21.5; //test value
 
-  lcd.print(">>> Soil moisture: ");
-  lcd.print(soilMoisture);
+  // lcd.print(">>> Soil moisture: ");
+  // lcd.print(soilMoisture);
 
-  for (int positionCounter = 0; positionCounter < 25; positionCounter++) {
-    lcd.scrollDisplayLeft();
-    delay(500);
-  }
+  // for (int positionCounter = 0; positionCounter < 25; positionCounter++) {
+  //   lcd.scrollDisplayLeft();
+  //   delay(500);
+  // }
   
-  lcd.clear();
+  // lcd.clear();
 
   lcd.print(">>> Humidity: ");
   lcd.print(humidity);
