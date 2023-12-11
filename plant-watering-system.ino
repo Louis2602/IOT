@@ -38,6 +38,7 @@ int waterSensor;
 int soilMoistureSensor;
 bool waterRequest = false;
 bool isNotified = false;
+String message = "";
 
 // Notification to mobile: Using IFTTT
 const char* host = "maker.ifttt.com";
@@ -46,8 +47,8 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 DHT dht(DHT11_PIN, DHT11);
 
 // Wifi information
-const char* ssid = "iPhone của Tùng Lâm";
-const char* password = "khongcopass";
+const char* ssid = "i180";
+const char* password = "CaoConNgua@1!";
 
 //***Set server***
 const char* mqttServer = "broker.hivemq.com"; 
@@ -80,18 +81,6 @@ void mqttConnect() {
       delay(5000);
     }
   }
-}
-void sendNotification(String message, String event) {
-  message.replace(" ", "%20");
-  String request = "/trigger/" + event + "/with/key/bLvS-wZC_P885one3ar9Zm?value1=" + message;
-  
-  while(!wifiClient.connect(host, 80)) {
-    Serial.println("Connection fail");
-    delay(1000);
-  }
-  Serial.println("Request: " + request);
-  wifiClient.print(String("GET ") + request + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-  delay(500);
 }
 
 //MQTT Receiver
@@ -194,9 +183,10 @@ void loop() {
   // Che do tu dong tuoi cay dua vao nhiet do, do am khong khi, do am dat
   Serial.println("Water Condition: " + String(isWater(soilMoistureSensor, waterLevelPercentage, temperature) || waterRequest));
   if(isWater(soilMoistureSensor, waterLevelPercentage, temperature) || waterRequest) {
-    sendNotification("Perfect condition to water plants, automatic watering will start", "waterAuto");
-    char history[50];
-    sprintf(history, "%s", currentDate);
+    char history[100];
+    message = "Auto Plant Watering at: " + currentDate;
+    message.toCharArray(history, sizeof(history));
+    Serial.println("Publish water history mqtt server: " + message);
     mqttClient.publish("iot12/waterHistory", history);
     Serial.println("Bắt đầu tưới nước...");
     water();
@@ -208,7 +198,10 @@ void loop() {
   
   // Kiem tra luong nuoc va push notification
   if(waterLevelPercentage < 12 && !isNotified){
-    sendNotification("Your jar is empty, please refill water!", "waterWarning");
+    char warning[50];
+    message = "Your jar is empty, please refill water!";
+    message.toCharArray(warning, sizeof(warning));
+    mqttClient.publish("iot12/waterWarning", warning);
     isNotified = true;
     Serial.println("Đã gửi thông báo hết nước!");
   }
@@ -251,6 +244,7 @@ void loop() {
         valueString += ",";
       }
     }
+    // valueString += currentDate;
     valueString.toCharArray(buffer, sizeof(buffer));
     Serial.println("Publish sensor values to mqtt server: " + valueString);
     mqttClient.publish("iot12/list_sensor_values", buffer);
@@ -261,10 +255,10 @@ int isWater(int moistureValue, int waterValue, float tempValue)
 {
   // 0: Khong tuoi
   // 1: Tuoi
-  // Soil is perfect
+  // Soil is too dry
   if(moistureValue <= 750) return 0;
   // Too cold or too hot
-  if(tempValue < 25 || tempValue > 35) return 0;
+  if(tempValue < 15 || tempValue > 35) return 0;
   // Het nuoc
   if(waterValue < 12) return 0;
   return 1;
@@ -272,6 +266,6 @@ int isWater(int moistureValue, int waterValue, float tempValue)
 
 void water() {
   digitalWrite(RELAY_PIN, HIGH);
-  delay(10000);
+  delay(5000);
   digitalWrite(RELAY_PIN, LOW);
 }
