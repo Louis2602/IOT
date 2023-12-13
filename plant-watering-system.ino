@@ -47,8 +47,8 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 DHT dht(DHT11_PIN, DHT11);
 
 // Wifi information
-const char* ssid = "i180";
-const char* password = "CaoConNgua@1!";
+const char* ssid = "iPhone của Tùng Lâm";
+const char* password = "khongcopass";
 
 //***Set server***
 const char* mqttServer = "broker.hivemq.com"; 
@@ -184,13 +184,13 @@ void loop() {
   Serial.println("Water Condition: " + String(isWater(soilMoistureSensor, waterLevelPercentage, temperature) || waterRequest));
   if(isWater(soilMoistureSensor, waterLevelPercentage, temperature) || waterRequest) {
     char history[100];
-    message = "Auto Plant Watering at: " + currentDate;
-    message.toCharArray(history, sizeof(history));
-    Serial.println("Publish water history mqtt server: " + message);
+    currentDate.toCharArray(history, sizeof(history));
     mqttClient.publish("iot12/waterHistory", history);
     Serial.println("Bắt đầu tưới nước...");
+    lcd.print("Auto watering...");
     water();
     Serial.println("Đã tưới nước xong...");
+    lcd.clear();
     waterRequest = false;
   }
   
@@ -209,6 +209,8 @@ void loop() {
     isNotified = false;
 
   // Hien thi thong tin len LCD
+  lcd.clear();
+
   lcd.print("Soil moisture:");
   lcd.setCursor(6, 1);
   lcd.print(String(soilMoisturePercentage) + "%");
@@ -266,6 +268,6 @@ int isWater(int moistureValue, int waterValue, float tempValue)
 
 void water() {
   digitalWrite(RELAY_PIN, HIGH);
-  delay(5000);
+  delay(10000);
   digitalWrite(RELAY_PIN, LOW);
 }
